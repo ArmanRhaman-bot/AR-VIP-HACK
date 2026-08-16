@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AR VIP HACK — Live Predictor</title>
+<style>
+:root{--bg:#090311;--panel:#160622;--gold:#f7c51c;--text:#fff;--muted:#b9abc7}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 50% 0,#3a1857 0,#10051b 45%,#060208 100%);font-family:Arial,sans-serif;color:var(--text);min-height:100vh}
+.wrap{max-width:520px;margin:auto;padding:18px}
+.header{text-align:center;padding:12px 0 18px}.logo{font-size:28px;font-weight:900;letter-spacing:2px;color:var(--gold)}.sub{color:var(--muted);font-size:13px;margin-top:6px}
+.card{background:linear-gradient(145deg,#210b32,#0e0416);border:1px solid #6d3b05;border-radius:24px;padding:18px;margin:12px 0;box-shadow:0 0 28px #0008}
+.status{display:flex;justify-content:space-between;font-size:12px;color:#ddd}.live{color:#63ff9a}.pill{border:1px solid #795b13;border-radius:999px;padding:7px 10px}
+.pred{text-align:center;padding:20px 10px}.target{color:var(--gold);font-size:13px}.size{font-size:42px;font-weight:900;margin:8px 0}.num{font-size:20px}.conf{margin:14px 0;color:#ffe57a}
+.bar{height:9px;background:#291533;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold);width:0%;transition:width .4s}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#100518;border-radius:16px;padding:14px}.label{font-size:11px;color:var(--muted)}.value{font-size:18px;font-weight:700;margin-top:5px}
+button{width:100%;border:0;border-radius:16px;padding:14px;font-weight:800;font-size:15px;background:linear-gradient(#ffd82f,#c89400);color:#170b00;cursor:pointer}
+button.secondary{margin-top:10px;background:#240c34;color:#fff;border:1px solid #6d3b05}
+.history{font-size:12px}.hrow{display:grid;grid-template-columns:1.2fr .7fr .8fr .8fr;padding:9px 0;border-bottom:1px solid #281530}.hhead{color:var(--muted)}
+.note{font-size:11px;line-height:1.5;color:#a99bad;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo">SK-TEAM DOMINATOR</div>
+    <div class="sub">LIVE WEB PREDICTOR • 30s / 60s AUTO REFRESH</div>
+  </div>
+
+  <div class="card">
+    <div class="status"><span class="pill"><span class="live">● LIVE</span></span><span class="pill" id="clock">--</span></div>
+    <div class="pred">
+      <div class="target">NEXT SIGNAL</div>
+      <div class="size" id="size">--</div>
+      <div class="num">NUMBER <b id="number">--</b> • <b id="color">--</b></div>
+      <div class="conf">CONFIDENCE <b id="confidence">--</b>%</div>
+      <div class="bar"><i id="confidenceBar"></i></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="metric"><div class="label">CURRENT PERIOD</div><div class="value" id="period">--</div></div>
+    <div class="metric"><div class="label">LAST RESULT</div><div class="value" id="last">--</div></div>
+  </div>
+
+  <div class="card">
+    <button onclick="loadLive()">⚡ GET LIVE PREDICTION</button>
+    <button class="secondary" onclick="toggleAuto()">⏱ START AUTO (60s)</button>
+  </div>
+
+  <div class="card">
+    <div class="label">LIVE HISTORY</div>
+    <div class="history">
+      <div class="hrow hhead"><span>PERIOD</span><span>NUM</span><span>SIZE</span><span>COLOR</span></div>
+      <div id="history"></div>
+    </div>
+    <div class="note">
+      This page converts the prediction logic from the supplied Telegram bot into a browser dashboard.
+      It reads public game-history data and displays a heuristic signal. It does not modify, bypass, or "hack" the BDWIN website, and no prediction is guaranteed.
+    </div>
+  </div>
+</div>
+
+<script>
+let timer=null, interval=60000;
+const $=id=>document.getElementById(id);
+
+async function loadLive(){
+  try{
+    const r=await fetch('/api/live',{cache:'no-store'});
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||'Unavailable');
+    $('period').textContent=d.period;
+    $('last').textContent=`${d.latest_number} • ${d.latest_size}`;
+    $('size').textContent=d.prediction.size;
+    $('number').textContent=d.prediction.number;
+    $('color').textContent=d.prediction.color;
+    $('confidence').textContent=d.prediction.confidence;
+    $('confidenceBar').style.width=d.prediction.confidence+'%';
+    $('clock').textContent=new Date().toLocaleTimeString();
+    $('history').innerHTML=d.history.map(x=>`<div class="hrow"><span>${x.period}</span><span>${x.number}</span><span>${x.size}</span><span>${x.color}</span></div>`).join('');
+  }catch(e){
+    $('clock').textContent='OFFLINE';
+    console.error(e);
+  }
+}
+
+function toggleAuto(){
+  const b=document.querySelector('button.secondary');
+  if(timer){clearInterval(timer);timer=null;b.textContent='⏱ START AUTO (60s)';return}
+  loadLive();timer=setInterval(loadLive,interval);b.textContent='⛔ STOP AUTO';
+}
+loadLive();
+</script>
+</body>
+</html>
