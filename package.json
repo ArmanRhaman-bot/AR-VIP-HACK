@@ -1,0 +1,10 @@
+{
+  "name": "smart-predictor-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Live statistical dashboard with a web user panel and protected admin panel.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "express": "^4.21.2" }
+}
