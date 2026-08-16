@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#5b21b6">
+  <title>Smart Predictor • Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-logo">SP</div>
+        <div>
+          <div class="brand-title">Smart Predictor</div>
+          <div class="brand-sub">Admin control</div>
+        </div>
+      </div>
+      <a class="admin-back" href="/signal">User panel</a>
+    </header>
+
+    <main class="container narrow">
+      <section id="loginCard" class="card auth-card">
+        <p class="eyebrow">ADMIN ACCESS</p>
+        <h1>Master key</h1>
+        <p class="muted">Enter the server-side master key configured in Render environment variables.</p>
+        <input id="password" type="password" placeholder="Master key" autocomplete="current-password">
+        <button id="loginBtn" class="btn primary full">Login</button>
+        <p id="loginError" class="error"></p>
+      </section>
+
+      <section id="panel" class="hidden">
+        <div class="grid-3">
+          <div class="stat card"><span>Session</span><strong id="sessionStatus">--</strong></div>
+          <div class="stat card"><span>Interval</span><strong id="intervalStatus">--</strong></div>
+          <div class="stat card"><span>Channel</span><strong id="channelStatus">--</strong></div>
+        </div>
+
+        <section class="card">
+          <p class="eyebrow">CONTROL PANEL</p>
+          <h2>Dashboard settings</h2>
+
+          <label>Analysis refresh interval</label>
+          <select id="interval">
+            <option value="30">30 seconds</option>
+            <option value="60">60 seconds</option>
+          </select>
+
+          <label>Channel label (optional)</label>
+          <input id="channel" placeholder="e.g. mychannel">
+
+          <label class="switch-row">
+            <input id="sessionActive" type="checkbox">
+            <span>Enable dashboard session indicator</span>
+          </label>
+
+          <div class="row">
+            <button id="saveBtn" class="btn primary">Save settings</button>
+            <button id="logoutBtn" class="btn danger">Logout</button>
+          </div>
+          <p id="saveMsg" class="success"></p>
+        </section>
+
+        <section class="card">
+          <p class="eyebrow">SYSTEM</p>
+          <h2>What this panel controls</h2>
+          <ul class="clean-list">
+            <li>Live data refresh interval</li>
+            <li>Dashboard session indicator</li>
+            <li>Optional channel label</li>
+            <li>Admin authentication</li>
+          </ul>
+          <div class="notice">
+            No wager execution, wallet control, or automatic betting is included in this web version.
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="/admin.js"></script>
+</body>
+</html>
